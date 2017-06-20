@@ -20,6 +20,14 @@ def index(request):
     return render(request, 'login.html')
 
 
+def book_details(request, book_id=None):
+    book = Book.objects.get(id=book_id)
+    context = {
+        'book': book
+    }
+    return render(request, 'details.html', context)
+
+
 @login_required(login_url='/store/login')
 def store(request):
     return render(request, 'store.html', {})
