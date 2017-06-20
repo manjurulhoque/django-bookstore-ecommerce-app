@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 
 # Create your views here.
@@ -8,10 +9,14 @@ from .models import Book
 from .forms import UserForm
 
 
+@login_required(login_url='/store/login')
 def index(request):
-    return render(request, 'index.html', {})
+    if request.user.is_authenticated():
+        return render(request, 'index.html', {})
+    return render(request, 'login.html')
 
 
+@login_required(login_url='/store/login')
 def store(request):
     count = Book.objects.all().count()
     context = {
@@ -20,21 +25,45 @@ def store(request):
     return render(request, 'store.html', context)
 
 
-def register(request):
+def login_user(request):
+    if request.user.is_authenticated():
+        return redirect('/store/')
     if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return render(request, 'index.html', {})
+            else:
+                return render(request, 'login.html', {'error_message': 'Your account has been disabled'})
+        else:
+            return render(request, 'login.html', {'error_message': 'Invalid login'})
+    return render(request, 'login.html')
 
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
 
-            user = authenticate(username=username, password=password)
+def logout_user(request):
+    logout(request)
+    return redirect('/store/login')
 
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('/')
-    return render(request, 'index.html', {})
+
+def register(request):
+    if request.user.is_authenticated():
+        return redirect('/store/')
+    form = UserForm(request.POST or None)
+    if form.is_valid():
+        user = form.save(commit=False)
+
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user.set_password(password)
+        user.save()
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('/')
+    return render(request, 'registration.html', {})
