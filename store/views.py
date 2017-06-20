@@ -12,17 +12,17 @@ from .forms import UserForm
 @login_required(login_url='/store/login')
 def index(request):
     if request.user.is_authenticated():
-        return render(request, 'index.html', {})
+        books = Book.objects.all()
+        context = {
+            'books': books
+        }
+        return render(request, 'index.html', context)
     return render(request, 'login.html')
 
 
 @login_required(login_url='/store/login')
 def store(request):
-    count = Book.objects.all().count()
-    context = {
-        'count': count
-    }
-    return render(request, 'store.html', context)
+    return render(request, 'store.html', {})
 
 
 def login_user(request):
