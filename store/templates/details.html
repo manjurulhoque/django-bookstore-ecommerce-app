@@ -11,13 +11,29 @@
                     <img src="{% static 'img/empty.png' %}" alt="Avatar" style="width:100%;opacity:0.85">
                     <div class="w3-container">
                         <h4><b>{{ book.title }}</b></h4>
-                        <p>Architect and engineer</p>
+                        <p>{{ book.author }}</p>
+                        <p>{{ reviews.count }} Reviews</p>
                     </div>
                 </div>
+                <div>
+                    {% if form %}
+                        <h4>Have you read this book? Post a review</h4>
+                        <form class="form-inline" method="POST" action="{% url 'book_details' book.pk %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" name="text" class="form-control">
+                            </div>
+                            <input class="btn btn-primary" type="submit" value="Leave review">
+                        </form>
+                    {% endif %}
+                </div>
                 <div style="margin-top: 20px">
-                    {% if book.reviews %}
-                        {% for review in book.reviews %}
-
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            {{ review.text }}
+                            <div>
+                                - {{ review.user.username }} on  {{ review.publish_date }}
+                            </div>
                         {% endfor %}
                     {% else %}
                         <p>There is no review for this book</p>

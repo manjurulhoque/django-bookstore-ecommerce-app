@@ -6,8 +6,8 @@ from django.views.generic import View
 
 # Create your views here.
 
-from .models import Book, BookOrder, Cart
-from .forms import UserForm
+from .models import Book, BookOrder, Cart, Review
+from .forms import UserForm, ReviewForm
 
 
 @login_required(login_url='/store/login')
@@ -26,6 +26,23 @@ def book_details(request, book_id=None):
     context = {
         'book': book
     }
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            new_review = Review(book=context['book'],user=request.user,text=request.POST['text'])
+            new_review.save()
+            # form = ReviewForm(request.POST or None)
+            # if form.is_valid():
+            #     new_review = Review(
+            #         book=context['book'],
+            #         user=request.user,
+            #         text=form.cleaned_data.get('text')
+            #         )
+            #     new_review.save()
+        else:
+            if Review.objects.filter(user=request.user, book=context['book']).count() == 0:
+                # form = ReviewForm()
+                context['form'] = 1
+    context['reviews'] = book.review_set.all()
     return render(request, 'details.html', context)
 
 
