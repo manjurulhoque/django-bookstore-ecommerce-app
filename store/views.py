@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
+from django.contrib.gis.geoip2 import GeoIP2
 
 # Create your views here.
 
@@ -43,6 +44,10 @@ def book_details(request, book_id=None):
                 # form = ReviewForm()
                 context['form'] = 1
     context['reviews'] = book.review_set.all()
+    ip = GeoIP2().city('103.196.233.10')
+    if not ip:
+        ip = GeoIP2().city('72.14.207.99')
+    context['ip'] = ip
     return render(request, 'details.html', context)
 
 

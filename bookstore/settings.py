@@ -124,3 +124,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'store/media')
 MEDIA_URL = 'media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'store/geo/')

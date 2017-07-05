@@ -40,6 +40,26 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="col-md-8">
+                <div id="map"></div>
+                <script>
+                  function initMap() {
+                    var uluru = {lat: {{ ip.latitude }}, lng: {{ ip.longitude }}};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                      zoom: 8,
+                      center: uluru,
+                      mapTypeId: 'terrain'
+                    });
+                    map.setTilt(45);
+                    var marker = new google.maps.Marker({
+                      position: uluru,
+                      map: map
+                    });
+                  }
+                </script>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAr4mVMRysq6L3KDKx2Ch8SNM7uoLBdAls&callback=initMap"
+                type="text/javascript"></script>
+            </div>
         </div>
     </div>
 {% endblock %}
