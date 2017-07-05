@@ -1,6 +1,8 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -11,4 +13,4 @@ urlpatterns = [
     url(r'^add/(\d+)', views.add_to_cart, name='add_to_cart'),
     url(r'^remove/(\d+)', views.remove_from_cart, name='remove_from_cart'),
     url(r'^cart/', views.cart, name='cart'),
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

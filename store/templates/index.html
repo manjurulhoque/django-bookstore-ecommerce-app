@@ -9,7 +9,11 @@
             {% for book in books %}
                 <div class="col-md-4" style="margin-bottom: 25px">
                     <div class="w3-card-4 test" style="width:92%;max-width:300px;">
-                        <a href="{% url 'book_details' book.id %}"><img src="{% static 'img/empty.png' %}" alt="Avatar" style="width:100%;opacity:0.85"></a>
+                        <a href="{% url 'book_details' book.id %}">
+                        {% if book.cover %}
+                        <img src="{{ book.cover.url }}" alt="Avatar" style="width:100%;opacity:0.85; height: 200px;">
+                        {% endif %}
+                        </a>
                         <div class="w3-container">
                             <a href="{%  url 'book_details' book.id %}"><h4><b>{{ book.title }}</b></h4></a>
                             <p>{{ book.author }}</p>
