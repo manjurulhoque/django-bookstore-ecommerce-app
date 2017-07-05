@@ -33,3 +33,21 @@ class Review(models.Model):
     user = models.ForeignKey(User)
     publish_date = models.DateField(default=timezone.now)
     text = models.TextField()
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User)
+    active = models.BooleanField(default=True)
+    order_date = models.DateField(null=True)
+    payment_type = models.CharField(max_length=200, null=True)
+    payment_id = models.CharField(max_length=100, null=True)
+
+    def add_to_cart(self, book_id):
+        book = Book.objects.get(pk=book_id)
+
+
+
+class BookOrder(models.Model):
+    book = models.ForeignKey(Book)
+    cart = models.ForeignKey(Cart)
+    quantity = models.IntegerField()
