@@ -16,6 +16,9 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li {% if request.resolver_match.url_name == '/' %}class="active"{% endif %}><a href="{% url 'index' %}">Home</a></li>
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'cart' %}">My Shopping Cart</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}

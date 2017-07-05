@@ -12,8 +12,11 @@
                         <a href="{% url 'book_details' book.id %}"><img src="{% static 'img/empty.png' %}" alt="Avatar" style="width:100%;opacity:0.85"></a>
                         <div class="w3-container">
                             <a href="{%  url 'book_details' book.id %}"><h4><b>{{ book.title }}</b></h4></a>
-                            <p>Architect and engineer</p>
+                            <p>{{ book.author }}</p>
                         </div>
+                        <span class="storefront_add_to_cart">
+                        <a class="btn btn-success" href="{% url 'add_to_cart' book.id %}">Add to Cart</a>
+                        </span>
                     </div>
                 </div>
             {% endfor %}

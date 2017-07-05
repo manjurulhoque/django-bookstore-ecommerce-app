@@ -44,6 +44,29 @@ class Cart(models.Model):
 
     def add_to_cart(self, book_id):
         book = Book.objects.get(pk=book_id)
+        try:
+            preexisting_order = BookOrder.objects.get(book=book, cart=self)
+            preexisting_order.quantity += 1
+            preexisting_order.save()
+        except BookOrder.DoesNotExist:
+            new_order = BookOrder.objects.create(
+                book=book,
+                cart=self,
+                quantity=1
+            )
+            new_order.save()
+
+    def remove_form_cart(self, book_id):
+        book = Book.objects.get(pk=book_id)
+        try:
+            preexisting_order = BookOrder.objects.get(book=book, cart=self)
+            if preexisting_order.quantity > 1:
+                preexisting_order.quantity -= 1
+                preexisting_order.save()
+            else:
+                preexisting_order.delete()
+        except BookOrder.DoesNotExist:
+            pass
 
 
 
